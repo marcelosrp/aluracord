@@ -1,43 +1,11 @@
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config.json'
 
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-
-      body {
-        font-family: 'Open Sans', sans-serif;
-      }
-
-      /* App fit Height */
-      html,
-      body,
-      #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-
-      #__next {
-        flex: 1;
-      }
-
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */
-    `}</style>
-  )
-}
-
 function Title(props) {
   const Tag = props.tag || 'h1'
+
   return (
     <>
       <Tag>{props.children}</Tag>
@@ -55,11 +23,18 @@ function Title(props) {
 }
 
 export default function PaginaInicial() {
-  const username = 'marcelosrp'
+  const [username, setUsername] = useState('')
+
+  const router = useRouter()
+
+  function handleSubmit(e) {
+    e.preventDefault()
+
+    router.push('/chat')
+  }
 
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: 'flex',
@@ -103,6 +78,7 @@ export default function PaginaInicial() {
               textAlign: 'center',
               marginBottom: '32px',
             }}
+            onSubmit={handleSubmit}
           >
             <Title tag="h2">Boas vindas de volta!</Title>
             <Text
@@ -125,6 +101,8 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
+              value={username}
+              onChange={({ target }) => setUsername(target.value)}
             />
             <Button
               type="submit"
@@ -136,6 +114,7 @@ export default function PaginaInicial() {
                 mainColorLight: appConfig.theme.colors.primary[400],
                 mainColorStrong: appConfig.theme.colors.primary[600],
               }}
+              disabled={username.length <= 2}
             />
           </Box>
           {/* Formulário */}
@@ -161,7 +140,9 @@ export default function PaginaInicial() {
                 borderRadius: '50%',
                 marginBottom: '16px',
               }}
-              src={`https://github.com/${username}.png`}
+              src={
+                username.length >= 3 ? `https://github.com/${username}.png` : ''
+              }
             />
             <Text
               variant="body4"
@@ -172,7 +153,7 @@ export default function PaginaInicial() {
                 borderRadius: '1000px',
               }}
             >
-              {username}
+              {username.length >= 3 && username}
             </Text>
           </Box>
           {/* Photo Area */}
