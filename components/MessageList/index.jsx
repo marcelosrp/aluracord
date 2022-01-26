@@ -1,7 +1,7 @@
-import { Box, Text, Image } from '@skynexui/components'
+import { Box, Text, Image, Button } from '@skynexui/components'
 import appConfig from '../../config.json'
 
-export default function MessageList(props) {
+export default function MessageList({ mensagens, handleDelMensagem }) {
   return (
     <Box
       tag="ul"
@@ -14,7 +14,7 @@ export default function MessageList(props) {
         marginBottom: '16px',
       }}
     >
-      {props.mensagens.map(mensagem => {
+      {mensagens.map(mensagem => {
         return (
           <Text
             key={mensagem.id}
@@ -32,6 +32,7 @@ export default function MessageList(props) {
             <Box
               styleSheet={{
                 marginBottom: '8px',
+                position: 'relative',
               }}
             >
               <Image
@@ -55,6 +56,16 @@ export default function MessageList(props) {
               >
                 {new Date().toLocaleDateString()}
               </Text>
+              <Button
+                variant="tertiary"
+                colorVariant="neutral"
+                label="Deletar"
+                styleSheet={{
+                  position: 'absolute',
+                  right: '10px',
+                }}
+                onClick={() => handleDelMensagem(mensagem.id)}
+              />
             </Box>
             {mensagem.texto}
           </Text>

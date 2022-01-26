@@ -22,6 +22,11 @@ export default function ChatPage() {
     }
   }
 
+  function handleDelMensagem(id) {
+    const filteredMensages = listaMensagens.filter(item => item.id !== id)
+    setListaMensagens(filteredMensages)
+  }
+
   return (
     <Box
       styleSheet={{
@@ -64,7 +69,10 @@ export default function ChatPage() {
             padding: '16px',
           }}
         >
-          <MessageList mensagens={listaMensagens} />
+          <MessageList
+            mensagens={listaMensagens}
+            handleDelMensagem={handleDelMensagem}
+          />
 
           <Box
             as="form"
