@@ -1,30 +1,60 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { createClient } from '@supabase/supabase-js'
 import { Box, TextField } from '@skynexui/components'
 import Header from '../components/Header'
 import MessageList from '../components/MessageList'
 import appConfig from '../config.json'
 
+// colocar loading antes de trazer as imagens
+// colocar dialog para exibir infos pessoais no hover do avatar
+
+const supabaseClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+)
+
 export default function ChatPage() {
   const [mensagem, setMensagem] = useState('')
   const [listaMensagens, setListaMensagens] = useState([])
 
+  useEffect(() => {
+    supabaseClient
+      .from('mensagens')
+      .select('*')
+      .order('id', { ascending: false })
+      .then(({ data }) => setListaMensagens(data))
+  }, [])
+
   function handleNovaMensagem(event) {
     const mensagemObj = {
-      id: listaMensagens.length + 1,
       de: 'marcelosrp',
       texto: mensagem,
     }
 
     if (event.key === 'Enter') {
       event.preventDefault()
-      setListaMensagens(prevState => [mensagemObj, ...prevState])
+
+      supabaseClient
+        .from('mensagens')
+        .insert([mensagemObj])
+        .then(({ data }) =>
+          setListaMensagens(prevState => [data[0], ...prevState]),
+        )
       setMensagem('')
     }
   }
 
   function handleDelMensagem(id) {
-    const filteredMensages = listaMensagens.filter(item => item.id !== id)
-    setListaMensagens(filteredMensages)
+    supabaseClient
+      .from('mensagens')
+      .delete()
+      .match({ id: id })
+      .then(({ data }) => {
+        const filteredMensages = listaMensagens.filter(
+          item => item.id !== data[0].id,
+        )
+        setListaMensagens(filteredMensages)
+      })
   }
 
   return (

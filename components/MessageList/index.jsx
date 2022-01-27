@@ -6,7 +6,7 @@ export default function MessageList({ mensagens, handleDelMensagem }) {
     <Box
       tag="ul"
       styleSheet={{
-        overflowY: 'scroll',
+        overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column-reverse',
         flex: 1,
@@ -43,7 +43,7 @@ export default function MessageList({ mensagens, handleDelMensagem }) {
                   display: 'inline-block',
                   marginRight: '8px',
                 }}
-                src={`https://github.com/vanessametonini.png`}
+                src={`https://github.com/${mensagem.de}.png`}
               />
               <Text tag="strong">{mensagem.de}</Text>
               <Text
