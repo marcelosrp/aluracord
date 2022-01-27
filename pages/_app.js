@@ -1,3 +1,6 @@
+import '../styles/spinner.css'
+import 'react-toastify/dist/ReactToastify.css'
+
 function GlobalStyle() {
   return (
     <style global jsx>{`
@@ -25,9 +28,6 @@ function GlobalStyle() {
         flex: 1;
       }
 
-      #__next > * {
-        flex: 1;
-      }
       /* ./App fit Height */
     `}</style>
   )

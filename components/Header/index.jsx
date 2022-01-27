@@ -1,4 +1,4 @@
-import { Box, Text, Button } from '@skynexui/components'
+import { Box, Image, Button } from '@skynexui/components'
 
 export default function Header() {
   return (
@@ -12,7 +12,13 @@ export default function Header() {
           justifyContent: 'space-between',
         }}
       >
-        <Text variant="heading5">Chat</Text>
+        <Image
+          styleSheet={{
+            width: '60px',
+          }}
+          src="/assets/logo-ico-icq.png"
+          alt="logo icq"
+        />
         <Button
           variant="tertiary"
           colorVariant="neutral"
