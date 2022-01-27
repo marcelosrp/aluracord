@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Box, TextField } from '@skynexui/components'
+import { Box, TextField, Button } from '@skynexui/components'
 import { ToastContainer, toast } from 'react-toastify'
 import Header from '../../components/Header'
 import MessageList from '../../components/MessageList'
@@ -39,20 +39,16 @@ export default function ChatPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  function handleNovaMensagem(event) {
+  function handleNovaMensagem() {
     const mensagemObj = {
       de: username,
       texto: mensagem,
     }
 
-    if (event.key === 'Enter') {
-      event.preventDefault()
-
-      addNewMessage(mensagemObj).then(({ data }) =>
-        setListaMensagens(prevState => [data[0], ...prevState]),
-      )
-      setMensagem('')
-    }
+    addNewMessage(mensagemObj).then(({ data }) =>
+      setListaMensagens(prevState => [data[0], ...prevState]),
+    )
+    setMensagem('')
   }
 
   function handleDelMensagem(id) {
@@ -90,7 +86,10 @@ export default function ChatPage() {
             borderRadius: '5px',
             backgroundColor: appConfig.theme.colors.neutrals[700],
             height: '100%',
-            maxWidth: '65%',
+            maxWidth: {
+              xs: '95%',
+              xl: '65%',
+            },
             maxHeight: '95vh',
             padding: '32px',
           }}
@@ -137,7 +136,31 @@ export default function ChatPage() {
                 }}
                 value={mensagem}
                 onChange={({ target }) => setMensagem(target.value)}
-                onKeyPress={event => handleNovaMensagem(event)}
+                onKeyPress={event => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault()
+
+                    if (mensagem.length === 0) {
+                      toast.error('Digite uma mensagem')
+                      return
+                    }
+
+                    handleNovaMensagem(mensagem)
+                  }
+                }}
+              />
+              <Button
+                label="Enviar"
+                styleSheet={{
+                  marginTop: '-8px',
+                  padding: '12px',
+                  backgroundColor: appConfig.theme.colors.neutrals[700],
+                  hover: {
+                    backgroundColor: appConfig.theme.colors.primary[700],
+                  },
+                }}
+                onClick={() => handleNovaMensagem()}
+                disabled={mensagem.length === 0}
               />
             </Box>
           </Box>
