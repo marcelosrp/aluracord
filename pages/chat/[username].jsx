@@ -5,6 +5,7 @@ import { Box, TextField, Button } from '@skynexui/components'
 import { ToastContainer, toast } from 'react-toastify'
 import Header from '../../components/Header'
 import MessageList from '../../components/MessageList'
+import ButtonSendSticker from '../../components/ButtonSendSticker'
 
 import appConfig from '../../config.json'
 
@@ -12,9 +13,8 @@ import {
   getAllMessages,
   addNewMessage,
   deleteMessage,
+  listenerMessages,
 } from '../../helpers/request'
-
-// colocar dialog para exibir infos pessoais no hover do avatar
 
 export default function ChatPage() {
   const [mensagem, setMensagem] = useState('')
@@ -39,15 +39,19 @@ export default function ChatPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  function handleNovaMensagem() {
+  useEffect(() => {
+    listenerMessages(novaMensagem =>
+      setListaMensagens(prevState => [novaMensagem, ...prevState]),
+    )
+  }, [])
+
+  function handleNovaMensagem(novaMensagem) {
     const mensagemObj = {
       de: username,
-      texto: mensagem,
+      texto: novaMensagem,
     }
 
-    addNewMessage(mensagemObj).then(({ data }) =>
-      setListaMensagens(prevState => [data[0], ...prevState]),
-    )
+    addNewMessage(mensagemObj).then(({ data }) => data)
     setMensagem('')
   }
 
@@ -58,7 +62,7 @@ export default function ChatPage() {
       )
       setListaMensagens(filteredMensages)
     })
-    toast.success('Mensagem deletada')
+    toast.success('Mensagem deletada com sucesso')
   }
 
   return (
@@ -149,17 +153,24 @@ export default function ChatPage() {
                   }
                 }}
               />
+
+              <ButtonSendSticker
+                onStickerClick={sticker => {
+                  handleNovaMensagem(`:sticker: ${sticker}`)
+                }}
+              />
+
               <Button
                 label="Enviar"
                 styleSheet={{
-                  marginTop: '-8px',
                   padding: '12px',
+                  margin: '-8px 12px 0 12px',
                   backgroundColor: appConfig.theme.colors.neutrals[700],
                   hover: {
                     backgroundColor: appConfig.theme.colors.primary[700],
                   },
                 }}
-                onClick={() => handleNovaMensagem()}
+                onClick={() => handleNovaMensagem(mensagem)}
                 disabled={mensagem.length === 0}
               />
             </Box>

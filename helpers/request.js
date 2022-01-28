@@ -19,3 +19,10 @@ export const addNewMessage = mensagem => {
 export const deleteMessage = id => {
   return supabaseClient.from('mensagens').delete().match({ id: id })
 }
+
+export const listenerMessages = addMessage => {
+  return supabaseClient
+    .from('mensagens')
+    .on('INSERT', response => addMessage(response.new))
+    .subscribe()
+}

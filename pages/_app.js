@@ -1,3 +1,4 @@
+import '../styles/style.css'
 import '../styles/spinner.css'
 import 'react-toastify/dist/ReactToastify.css'
 

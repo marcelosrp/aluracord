@@ -1,4 +1,4 @@
-import { Box, Text, Image, Button } from '@skynexui/components'
+import { Box, Text, Image, Button, Icon } from '@skynexui/components'
 import Spinner from '../Spinner'
 import appConfig from '../../config.json'
 
@@ -29,6 +29,7 @@ export default function MessageList({
             height: '100%',
             overflow: 'hidden',
           }}
+          className="custom-scrollbar"
         >
           <Spinner />
         </Box>
@@ -78,7 +79,7 @@ export default function MessageList({
                   </Text>
                   <Button
                     variant="tertiary"
-                    label="Deletar"
+                    label={<Icon name="FaTrash" />}
                     styleSheet={{
                       position: 'absolute',
                       right: '10px',
@@ -88,7 +89,17 @@ export default function MessageList({
                     onClick={() => handleDelMensagem(mensagem.id)}
                   />
                 </Box>
-                {mensagem.texto}
+
+                {mensagem.texto.startsWith(':sticker:') ? (
+                  <Image
+                    styleSheet={{
+                      maxWidth: '150px',
+                    }}
+                    src={`${mensagem.texto.replace(':sticker:', '')}`}
+                  />
+                ) : (
+                  mensagem.texto
+                )}
               </Text>
             )
           })}

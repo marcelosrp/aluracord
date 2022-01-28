@@ -8,8 +8,8 @@ import appConfig from '../config.json'
 export default function PaginaInicial() {
   const [username, setUsername] = useState('')
   const [userGithubData, setUserGithubData] = useState({})
-  //const [userNotFound, setUserNotFound] = useState(false)
   const [githubError, setGithubError] = useState(false)
+  const [githubUserNotFound, setGithubUserNotFound] = useState(false)
 
   const router = useRouter()
 
@@ -26,19 +26,19 @@ export default function PaginaInicial() {
         const data = await response.json()
 
         if (response.status === 404) {
-          setGithubError(true)
+          setGithubUserNotFound(true)
           return
         }
 
         if (response.status === 403) {
           setGithubError(true)
-          //toast.error('Um erro foi encontrado, tente novamente mais tarde')
+          toast.error('Um erro foi encontrado, tente novamente mais tarde')
           return
         }
 
         setUserGithubData(data)
       } catch (error) {
-        console.log(error)
+        toast.error(error)
       }
     }
     if (username.length >= 3) {
@@ -130,19 +130,21 @@ export default function PaginaInicial() {
                 gap: '6px',
               }}
             >
-              {/* {!githubError &&
-                (
+              {!githubUserNotFound ? (
+                <>
                   <Text as="p">
                     <strong>Followers: </strong>
                     {userGithubData.followers}
                   </Text>
-                ) |
-                  (
-                    <Text as="p">
-                      <strong>Following: </strong>
-                      {userGithubData.following}
-                    </Text>
-                  )} */}
+                  |
+                  <Text as="p">
+                    <strong>Following: </strong>
+                    {userGithubData.following}
+                  </Text>
+                </>
+              ) : (
+                <Text as="p">Usário não encontrado</Text>
+              )}
             </Box>
 
             <TextField
