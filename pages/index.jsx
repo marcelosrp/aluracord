@@ -5,7 +5,7 @@ import { Box, Button, TextField, Image } from '@skynexui/components'
 import appConfig from '../config.json'
 
 export default function PaginaInicial() {
-  const [username, setUsername] = useState('marcelosrp')
+  const [username, setUsername] = useState('')
 
   const router = useRouter()
 
@@ -83,7 +83,9 @@ export default function PaginaInicial() {
                   marginBottom: '16px',
                 }}
                 src={
-                  username.length > 3 && `https://github.com/${username}.png`
+                  username.length > 3
+                    ? `https://github.com/${username}.png`
+                    : 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
                 }
                 alt={`avatar ${username}`}
               />
@@ -99,6 +101,7 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[100],
                 },
               }}
+              placeholder="Entre com seu usuário do github"
               value={username}
               onChange={({ target }) => setUsername(target.value)}
             />
