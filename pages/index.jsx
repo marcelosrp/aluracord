@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Box, Button, TextField, Image } from '@skynexui/components'
+import { Box, Button, TextField, Image, Text } from '@skynexui/components'
 import appConfig from '../config.json'
 
 export default function PaginaInicial() {
   const [username, setUsername] = useState('')
+  const [userGithubData, setUserGithubData] = useState({})
+  //const [userNotFound, setUserNotFound] = useState(false)
+  const [githubError, setGithubError] = useState(false)
 
   const router = useRouter()
 
@@ -15,8 +19,36 @@ export default function PaginaInicial() {
     router.push(`/chat/${username}`)
   }
 
+  useEffect(() => {
+    async function getGithubUser() {
+      try {
+        const response = await fetch(`https://api.github.com/users/${username}`)
+        const data = await response.json()
+
+        if (response.status === 404) {
+          setGithubError(true)
+          return
+        }
+
+        if (response.status === 403) {
+          setGithubError(true)
+          //toast.error('Um erro foi encontrado, tente novamente mais tarde')
+          return
+        }
+
+        setUserGithubData(data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    if (username.length >= 3) {
+      getGithubUser()
+    }
+  }, [username])
+
   return (
     <>
+      <ToastContainer position="bottom-right" autoClose={3000} />
       <Head>
         <title>ICQlura</title>
       </Head>
@@ -80,15 +112,37 @@ export default function PaginaInicial() {
               <Image
                 styleSheet={{
                   borderRadius: '50%',
-                  marginBottom: '16px',
+                  marginBottom: '8px',
                 }}
                 src={
-                  username.length > 3
+                  username.length > 3 && !githubError
                     ? `https://github.com/${username}.png`
                     : 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
                 }
                 alt={`avatar ${username}`}
               />
+            </Box>
+
+            <Box
+              styleSheet={{
+                display: 'flex',
+                marginBottom: '16px',
+                gap: '6px',
+              }}
+            >
+              {/* {!githubError &&
+                (
+                  <Text as="p">
+                    <strong>Followers: </strong>
+                    {userGithubData.followers}
+                  </Text>
+                ) |
+                  (
+                    <Text as="p">
+                      <strong>Following: </strong>
+                      {userGithubData.following}
+                    </Text>
+                  )} */}
             </Box>
 
             <TextField
