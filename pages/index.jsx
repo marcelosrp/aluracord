@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Box, Button, TextField, Image, Text } from '@skynexui/components'
@@ -7,9 +6,6 @@ import appConfig from '../config.json'
 
 export default function PaginaInicial() {
   const [username, setUsername] = useState('')
-  const [userGithubData, setUserGithubData] = useState({})
-  const [githubError, setGithubError] = useState(false)
-  const [githubUserNotFound, setGithubUserNotFound] = useState(false)
 
   const router = useRouter()
 
@@ -19,36 +15,8 @@ export default function PaginaInicial() {
     router.push(`/chat/${username}`)
   }
 
-  useEffect(() => {
-    async function getGithubUser() {
-      try {
-        const response = await fetch(`https://api.github.com/users/${username}`)
-        const data = await response.json()
-
-        if (response.status === 404) {
-          setGithubUserNotFound(true)
-          return
-        }
-
-        if (response.status === 403) {
-          setGithubError(true)
-          toast.error('Um erro foi encontrado, tente novamente mais tarde')
-          return
-        }
-
-        setUserGithubData(data)
-      } catch (error) {
-        toast.error(error)
-      }
-    }
-    if (username.length >= 3) {
-      getGithubUser()
-    }
-  }, [username])
-
   return (
     <>
-      <ToastContainer position="bottom-right" autoClose={3000} />
       <Head>
         <title>ICQlura</title>
       </Head>
@@ -115,7 +83,7 @@ export default function PaginaInicial() {
                   marginBottom: '8px',
                 }}
                 src={
-                  username.length > 3 && !githubError
+                  username.length > 3
                     ? `https://github.com/${username}.png`
                     : 'https://cdn-icons-png.flaticon.com/512/25/25231.png'
                 }
@@ -129,23 +97,7 @@ export default function PaginaInicial() {
                 marginBottom: '16px',
                 gap: '6px',
               }}
-            >
-              {!githubUserNotFound ? (
-                <>
-                  <Text as="p">
-                    <strong>Followers: </strong>
-                    {userGithubData.followers}
-                  </Text>
-                  |
-                  <Text as="p">
-                    <strong>Following: </strong>
-                    {userGithubData.following}
-                  </Text>
-                </>
-              ) : (
-                <Text as="p">Usário não encontrado</Text>
-              )}
-            </Box>
+            ></Box>
 
             <TextField
               fullWidth

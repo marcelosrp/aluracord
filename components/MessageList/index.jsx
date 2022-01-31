@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { Box, Text, Image, Button, Icon } from '@skynexui/components'
 import Spinner from '../Spinner'
 import appConfig from '../../config.json'
@@ -18,6 +19,7 @@ export default function MessageList({
         color: appConfig.theme.colors.neutrals['000'],
         marginBottom: '16px',
       }}
+      className="custom-scrollbar"
     >
       {isLoading ? (
         <Box
@@ -29,7 +31,6 @@ export default function MessageList({
             height: '100%',
             overflow: 'hidden',
           }}
-          className="custom-scrollbar"
         >
           <Spinner />
         </Box>
@@ -86,6 +87,7 @@ export default function MessageList({
                       backgroundColor: '#df3737',
                       color: 'white',
                     }}
+                    title="Deletar mensagem"
                     onClick={() => handleDelMensagem(mensagem.id)}
                   />
                 </Box>
@@ -107,4 +109,10 @@ export default function MessageList({
       )}
     </Box>
   )
+}
+
+MessageList.propTypes = {
+  mensagens: PropTypes.array.isRequired,
+  handleDelMensagem: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 }

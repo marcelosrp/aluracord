@@ -21,8 +21,37 @@ export default function ChatPage() {
   const [listaMensagens, setListaMensagens] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
+  const [userGithubData, setUserGithubData] = useState({})
+  const [githubError, setGithubError] = useState(false)
+  const [githubUserNotFound, setGithubUserNotFound] = useState(false)
+
   const router = useRouter()
   const { username } = router.query
+
+  useEffect(() => {
+    async function getGithubUser() {
+      try {
+        const response = await fetch(`https://api.github.com/users/${username}`)
+        const data = await response.json()
+
+        if (response.status === 404) {
+          setGithubUserNotFound(true)
+          return
+        }
+
+        if (response.status === 403) {
+          setGithubError(true)
+          toast.error('Um erro foi encontrado, tente novamente mais tarde')
+          return
+        }
+
+        setUserGithubData(data)
+      } catch (error) {
+        toast.error(error)
+      }
+    }
+    getGithubUser()
+  }, [username])
 
   useEffect(() => {
     setIsLoading(true)
@@ -98,7 +127,7 @@ export default function ChatPage() {
             padding: '32px',
           }}
         >
-          <Header />
+          <Header userGithubData={userGithubData} />
 
           <Box
             styleSheet={{
