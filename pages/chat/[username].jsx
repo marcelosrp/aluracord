@@ -194,7 +194,7 @@ export default function ChatPage() {
                 styleSheet={{
                   padding: '12px',
                   margin: '-8px 12px 0 12px',
-                  backgroundColor: appConfig.theme.colors.neutrals[700],
+                  backgroundColor: appConfig.theme.colors.primary[300],
                   hover: {
                     backgroundColor: appConfig.theme.colors.primary[700],
                   },
