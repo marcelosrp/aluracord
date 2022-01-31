@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Button, Text, Image } from '@skynexui/components'
 import appConfig from '../../config.json'
 
-export default function ButtonSendSticker(props) {
+export default function ButtonSendSticker({ onStickerClick }) {
   const [isOpen, setOpenState] = React.useState('')
 
   return (
@@ -78,7 +79,7 @@ export default function ButtonSendSticker(props) {
               <Text
                 onClick={() => {
                   if (Boolean(props.onStickerClick)) {
-                    props.onStickerClick(sticker)
+                    onStickerClick(sticker)
                   }
                 }}
                 tag="li"
@@ -103,4 +104,8 @@ export default function ButtonSendSticker(props) {
       )}
     </Box>
   )
+}
+
+ButtonSendSticker.propTypes = {
+  onStickerClick: PropTypes.func.isRequired,
 }
